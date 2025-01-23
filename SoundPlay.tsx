@@ -8,6 +8,17 @@ const App = () => {
   const [audioPath, setAudioPath] = useState('');
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
 
+  function timeToMilliseconds(timeString) {
+    const [minutes, seconds, milliseconds] = timeString.split(':').map(Number);
+
+    const totalMilliseconds = 
+      (minutes * 60 * 1000) + 
+      (seconds * 1000) + 
+      milliseconds;
+  
+    return totalMilliseconds;
+  }
+
   const startRecording = async () => {
     setRecording(true);
     const path = 'sound.mp4'; // File name
@@ -39,6 +50,7 @@ const App = () => {
     if (audioPath) {
       console.log("received audio path"+audioPath);
       await audioRecorderPlayer.startPlayer(audioPath);
+      playBackGroundMusic()
       audioRecorderPlayer.addPlayBackListener((e) => {
         if (e.currentPosition === e.duration) {
           audioRecorderPlayer.stopPlayer();
@@ -52,6 +64,86 @@ const App = () => {
         
     }
   };
+
+  async function playBackGroundMusic() {
+
+    console.log("This is play time "+recordTime);
+    
+    // Import the react-native-sound module
+    var Sound = require('react-native-sound');
+
+    // Enable playback in silence mode
+    Sound.setCategory('Playback');
+
+    // Load the sound file 'whoosh.mp3' from the app bundle
+    // See notes below about preloading sounds within initialization code below.
+    var whoosh = new Sound('vlog_music.mp3', Sound.MAIN_BUNDLE, (error) => {
+    if (error) {
+        console.log('failed to load the sound', error);
+        return;
+    }
+    // loaded successfully
+    console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+
+     // Reduce the volume by half
+     whoosh.setVolume(0.2);
+
+     // Position the sound to the full right in a stereo field
+     whoosh.setPan(0.5);
+ 
+    // Play the sound with an onEnd callback
+    whoosh.play((success) => {
+        if (success) {
+        console.log('successfully finished playing');
+        } else {
+        console.log('playback failed due to audio decoding errors');
+        }
+    });
+    });
+
+    const milliseconds = timeToMilliseconds(recordTime);
+    console.log("it will stop after this time in ms"+milliseconds);
+
+    setTimeout(()=>{
+        console.log("time out function started");
+        
+        whoosh.stop()
+    },milliseconds)
+
+    // Reduce the volume by half
+    whoosh.setVolume(0.2);
+
+    // Position the sound to the full right in a stereo field
+    whoosh.setPan(0.5);
+
+    // // Loop indefinitely until stop() is called
+    // whoosh.setNumberOfLoops(-1);
+
+    // // Get properties of the player instance
+    // console.log('volume: ' + whoosh.getVolume());
+    // console.log('pan: ' + whoosh.getPan());
+    // console.log('loops: ' + whoosh.getNumberOfLoops());
+
+    // // Seek to a specific point in seconds
+    // whoosh.setCurrentTime(2.5);
+
+    // // Get the current playback point in seconds
+    // whoosh.getCurrentTime((seconds) => console.log('at ' + seconds));
+
+    // // Pause the sound
+    // whoosh.pause();
+
+    // // Stop the sound and rewind to the beginning
+    // whoosh.stop(() => {
+    // // Note: If you want to play a sound after stopping and rewinding it,
+    // // it is important to call play() in a callback.
+    // whoosh.play();
+    // });
+
+    // // Release the audio player resource
+    // whoosh.release();
+    
+  }
 
   return (
     <View style={styles.container}>
