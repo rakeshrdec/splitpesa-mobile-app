@@ -1,79 +1,87 @@
-import * as React from 'react';
-import { View, Text } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Sound from 'react-native-sound';
-import { Button } from '@react-navigation/elements';
+import React, {useState, useRef} from 'react';
+import {View, Text, Button, StyleSheet, Pressable} from 'react-native';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
-export default function SoundPlay() {
-  const navigation = useNavigation();
+const App = () => {
+  const [recording, setRecording] = useState(false);
+  const [recordTime, setRecordTime] = useState('00:00:00');
+  const [audioPath, setAudioPath] = useState('');
+  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
 
-  function soundplayer() 
-  {
-    // Import the react-native-sound module
-    var Sound = require('react-native-sound');
+  const startRecording = async () => {
+    setRecording(true);
+    const path = 'sound.mp4'; // File name
+    // const audioSet = {
+    //   AudioEncoderAndroid: AudioRecorderPlayer.AudioEncoderAndroidType.AAC,
+    //   AudioSourceAndroid: AudioRecorderPlayer.AudioSourceAndroidType.MIC,
+    //   AVModeIOS: AudioRecorderPlayer.AVModeIOS.playAndRecord,
+    // };
+    const result = await audioRecorderPlayer.startRecorder();
+    console.log("This is log for stop recording :"+result); 
+    audioRecorderPlayer.addRecordBackListener((e) => {
+      setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+      return;
+    });
+  };
 
-    // Enable playback in silence mode
-    Sound.setCategory('Playback');
+  const stopRecording = async () => {
+    console.log("stop recording function called");    
+    setRecording(false);
+    const result = await audioRecorderPlayer.stopRecorder();
+    console.log("This is log for stop recording :"+result);    
+    audioRecorderPlayer.removeRecordBackListener();
+    setAudioPath(result);
+  };
 
-    // Load the sound file 'whoosh.mp3' from the app bundle
-    // See notes below about preloading sounds within initialization code below.
-    var whoosh = new Sound('vlog_music.mp3', Sound.MAIN_BUNDLE, (error) => {
-    if (error) {
-        console.log('failed to load the sound', error);
-        return;
-    }
-    // loaded successfully
-    console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-
-    // Play the sound with an onEnd callback
-    whoosh.play((success) => {
-        if (success) {
-        console.log('successfully finished playing');
-        } else {
-        console.log('playback failed due to audio decoding errors');
+  const playRecording = async () => {
+    console.log("in the play record");
+    
+    if (audioPath) {
+      console.log("received audio path"+audioPath);
+      await audioRecorderPlayer.startPlayer(audioPath);
+      audioRecorderPlayer.addPlayBackListener((e) => {
+        if (e.currentPosition === e.duration) {
+          audioRecorderPlayer.stopPlayer();
+          audioRecorderPlayer.removePlayBackListener();
         }
-    });
-    });
-
-    // Reduce the volume by half
-    whoosh.setVolume(0.5);
-
-    // Position the sound to the full right in a stereo field
-    whoosh.setPan(1);
-
-    // Loop indefinitely until stop() is called
-    whoosh.setNumberOfLoops(-1);
-
-    // Get properties of the player instance
-    console.log('volume: ' + whoosh.getVolume());
-    console.log('pan: ' + whoosh.getPan());
-    console.log('loops: ' + whoosh.getNumberOfLoops());
-
-    // Seek to a specific point in seconds
-    whoosh.setCurrentTime(2.5);
-
-    // Get the current playback point in seconds
-    whoosh.getCurrentTime((seconds) => console.log('at ' + seconds));
-
-    // Pause the sound
-    whoosh.pause();
-
-    // Stop the sound and rewind to the beginning
-    whoosh.stop(() => {
-    // Note: If you want to play a sound after stopping and rewinding it,
-    // it is important to call play() in a callback.
-    whoosh.play();
-    });
-
-    // Release the audio player resource
-    whoosh.release();
-  }
+      });
+    }
+    else
+    {
+        console.log("There is no audio path to play the music");
+        
+    }
+  };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Play Sound</Text>
-      <Button onPress={() => soundplayer()}>Play Any Sound</Button>
+    <View style={styles.container}>
+      <Text style={styles.timerText}>{recordTime}</Text>
+      {!recording ? (
+        <Pressable style={styles.btnStyle}  onPress={startRecording}><Text>"Start Recording"</Text></Pressable>
+      ) : (
+        <Pressable style={styles.btnStyle} onPress={stopRecording}><Text>"Stop Recording"</Text></Pressable>
+      )}
+      {audioPath && <Pressable style={styles.btnStyle} onPress={playRecording} ><Text>"Play Recording"</Text></Pressable>}
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timerText: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  btnStyle: {
+    margin:10,
+    backgroundColor:'lightgray',
+    borderRadius:10,
+    padding:10
+  }
+});
+
+export default App;
