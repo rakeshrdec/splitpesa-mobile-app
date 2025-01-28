@@ -6,6 +6,10 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SoundPlay from './SoundPlay';
 import { Button } from '@react-navigation/elements';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import store from './src/redux_db/store';
+
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -50,8 +54,12 @@ function RootStack() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <NavigationContainer>
+            <RootStack />
+        </NavigationContainer>
+      </Provider>
+    </SafeAreaProvider>
   );
 }
