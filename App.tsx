@@ -54,12 +54,12 @@ function RootStack() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <NavigationContainer>
-            <RootStack />
-        </NavigationContainer>
-      </Provider>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+          <NavigationContainer>
+              <RootStack />
+          </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
