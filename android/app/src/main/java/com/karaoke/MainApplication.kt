@@ -1,4 +1,4 @@
-package com.karaoke
+package com.splitpaisa
 
 import android.app.Application
 import com.facebook.react.PackageList

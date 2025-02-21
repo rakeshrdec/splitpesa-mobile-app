@@ -1,3 +1,30 @@
+# Teask Details
+
+1. Real-time Audio Processing with Pitch Adjustment (60 minutes)
+Scenario:
+You are building a splitpaisa app where users sing along with background music. Write a
+React Native component to achieve the following:
+Requirements:
+1. Create a simple React Native component that:
+	o Uses the device microphone to capture audio in real-time.
+	o Plays a provided audio file (background track) simultaneously.
+	o Applies a basic pitch adjustment (e.g., +2 semitones) to the captured audio.
+2. Ensure both the background music and the user’s audio are synced.
+Input:
+	 A preloaded MP3 file (background track).
+	 Use react-native-sound or a similar library for playback.
+	Output:
+	 Real-time pitch-corrected user audio and background track output through the
+	device speaker.
+Key Skills Tested:
+	 Audio/video processing
+	 Third-party library usage (e.g., WebRTC, react-native-sound)
+	 Real-time functionality implementation
+
+
+\27.1.12297006
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started

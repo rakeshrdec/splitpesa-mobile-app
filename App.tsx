@@ -9,6 +9,7 @@ import { Button } from '@react-navigation/elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import store from './src/redux_db/store';
+import AppNavigator from './src/navigation';
 
 
 function HomeScreen() {
@@ -44,7 +45,12 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator>      
+    <Stack.Navigator>
+      <Stack.Screen name="nav1" component={AppNavigator} 
+      options={{
+        headerShown: false
+      }}
+      />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="soundplay" component={SoundPlay} />
       <Stack.Screen name="Details" component={DetailsScreen} />

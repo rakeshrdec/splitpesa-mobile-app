@@ -1,6 +1,11 @@
 import React, {useState, useRef} from 'react';
 import {View, Text, Button, StyleSheet, Pressable} from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+// import YTMusic from "ytmusic-api"
+
+// import YoutubeMusicApicAll from './src/youtube_music';
+
+
 
 const App = () => {
   const [recording, setRecording] = useState(false);
@@ -8,6 +13,19 @@ const App = () => {
   const [audioPath, setAudioPath] = useState('');
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
 
+  async function youtubeSearchApi(payload)
+  {
+    console.log(payload);
+    YoutubeMusicApicAll()
+    
+    // const ytmusic = new YTMusic()
+    // await ytmusic.initialize(/* Optional: Custom cookies */)
+
+    // ytmusic.search("Never gonna give you up").then(songs => {
+    //   console.log(songs)
+    // })
+
+  }
   function timeToMilliseconds(timeString) {
     const [minutes, seconds, milliseconds] = timeString.split(':').map(Number);
 
@@ -147,13 +165,16 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.timerText}>{recordTime}</Text>
-      {!recording ? (
+      <Text style={styles.timerText}>{'recordTime'}</Text>
+      {/* {!recording ? (
         <Pressable style={styles.btnStyle}  onPress={startRecording}><Text>"Start Recording"</Text></Pressable>
       ) : (
         <Pressable style={styles.btnStyle} onPress={stopRecording}><Text>"Stop Recording"</Text></Pressable>
       )}
       {audioPath && <Pressable style={styles.btnStyle} onPress={playRecording} ><Text>"Play Recording"</Text></Pressable>}
+      <View style={{width:'100%',height:100,bottom:50, position:'absolute'}}>
+        <Pressable style={styles.btnStyle} onPress={()=>{youtubeSearchApi("searched song")}}><Text>search song on</Text></Pressable>
+      </View> */}
     </View>
   );
 };
