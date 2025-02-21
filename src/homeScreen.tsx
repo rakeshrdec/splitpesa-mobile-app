@@ -35,7 +35,22 @@ const HomeScreen: React.FC = () => {
             <Text style={{width:'100%', backgroundColor:'black', height:1, marginVertical:5}}></Text>
             </TouchableOpacity>
         )}
+
       />
+
+    <TouchableOpacity
+        style={{ marginTop: 20, padding: 15, backgroundColor: 'blue', alignItems: 'center' }}
+        onPress={() => { navigation.navigate("AddGroup")}}
+      >
+        <Text style={{ color: 'white', fontSize: 18 }}>+ Add Group</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ marginTop: 20, padding: 15, backgroundColor: 'blue', alignItems: 'center' }}
+        onPress={() => navigation.navigate("Groups")}
+        >
+            <Text style={{ color: 'white', fontSize: 18 }}>View Groups</Text>
+     </TouchableOpacity>
+
       <TouchableOpacity
         style={{ marginTop: 20, padding: 15, backgroundColor: 'blue', alignItems: 'center' }}
         onPress={() => { navigation.navigate("addexpense")}}
